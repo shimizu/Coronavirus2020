@@ -1,0 +1,122 @@
+html,
+body {
+	width: 100%;
+	height: 100%;
+}
+#legend {
+	padding: 0;
+}
+#legend li {
+	display: inline;
+}
+#legend li::before {
+	display: inline-block;
+	content: " ";
+	width: 1em;
+	height: 1em;
+	margin-left: 1em;
+	margin-right: 0.2em;
+}
+
+#legend li.confirmed::before {
+	background-color: gray;
+}
+#legend li.recovered::before {
+	background-color: lime;
+}
+#legend li.death::before {
+	background-color: red;
+}
+
+.chart {
+	width: 100%;
+	background-color: #eee;
+}
+.bar0 {
+	fill: gray;
+}
+.bar1 {
+	fill: lime;
+}
+.bar2 {
+	fill: red;
+}
+#contents {
+	margin-top: 120px;
+	margin-bottom: 25%;
+	width: 99%;
+}
+#ui {
+	position: fixed;
+	top: 0;
+	width: 98%;
+	background-color: white;
+	padding: 10px;
+	box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.4);
+}
+
+/* axis */
+.axisLayer .axis {
+}
+.axisLayer .axis .domain {
+	stroke: #333333;
+}
+.axisLayer .tick line {
+	stroke: #333333;
+	stroke-width: 1px;
+}
+.axisLayer .tick text {
+	fill: #333333;
+	/*font-family: Oswald, sans-serif;*/
+	font-size: 14px;
+	letter-spacing: .05em;
+}
+
+/* label */
+.axisLayer .label {
+	font-size: 12px;
+	font-weight: normal;
+	letter-spacing: .05em;
+}
+
+/* grid */
+.backgroundLayer .grid line {
+	stroke: #aaa;
+	stroke-dasharray: 3, 3;
+}
+
+/* grind のベースライン */
+.backgroundLayer .grid .domain {
+	stroke: none;
+}
+
+.input-range::-webkit-slider-thumb {
+	width: 35px;
+	height: 35px;
+}
+
+div.tooltip {
+	position: absolute;
+	min-width: 60px;
+	padding: 8px;
+	font: 12px sans-serif;
+	background: #fff;
+	border: 1px solid #666;
+	border-radius: 2px;
+	pointer-events: none;
+}
+
+div.tooltip span {
+	display: block;
+	text-align: center;
+}
+div.tooltip.Confirmed span.value {
+	color: gray;
+}
+
+div.tooltip.recovered span.value {
+	color: lime;
+}
+div.tooltip.death span.value {
+	color: red;
+}
