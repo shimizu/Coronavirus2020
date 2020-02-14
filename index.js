@@ -1,7 +1,7 @@
 var slider = d3.select('#ui').append('input').attr('class', 'input-range');
 var tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('opacity', 0);
 var format = d3.format(',');
-var maxValue = 35000;
+var maxValue = 50000;
 var minValue = 200;
 var label = d3.select('#ui').append('div');
 var labelFormat = function(s) {
