@@ -18,9 +18,9 @@ var cast = function(d) {
 	return d;
 };
 
-var p1 = d3.csv('data/time_series_2019-ncov-Confirmed.csv', cast);
-var p2 = d3.csv('data/time_series_2019-ncov-Recovered.csv', cast);
-var p3 = d3.csv('data/time_series_2019-ncov-Deaths.csv', cast);
+var p1 = d3.csv('data/time_series_19-covid-Confirmed.csv', cast);
+var p2 = d3.csv('data/time_series_19-covid-Recovered.csv', cast);
+var p3 = d3.csv('data/time_series_19-covid-Deaths.csv', cast);
 
 Promise.all([ p1, p2, p3 ]).then(function(data) {
 	var dateSeries = Object.keys(data[0][0]).filter(function(d) {
