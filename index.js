@@ -190,7 +190,6 @@ function drawBarchart(rdata, dateSeries, country, names) {
 		.xTickSize(4)
 		.yTickSize(4)
 		.yTickFormat(function(d) {
-			console.log(names.get(d));
 			var n = names.get(d);
 			return !n ? d : n.JP;
 		});
