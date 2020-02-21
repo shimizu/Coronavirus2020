@@ -14,7 +14,6 @@ var cast = function(d) {
 		if (!d[key] && d[key] === '') d[key] = 0;
 	});
 
-	if (d['Country/Region'] === 'United Arab Emirates') d['Country/Region'] = 'UAE';
 	return d;
 };
 
