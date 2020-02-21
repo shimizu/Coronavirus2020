@@ -21,8 +21,19 @@ var cast = function(d) {
 var p1 = d3.csv('data/time_series_19-covid-Confirmed.csv', cast);
 var p2 = d3.csv('data/time_series_19-covid-Recovered.csv', cast);
 var p3 = d3.csv('data/time_series_19-covid-Deaths.csv', cast);
+var p4 = d3.tsv('data/namelist.tsv');
 
-Promise.all([ p1, p2, p3 ]).then(function(data) {
+Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
+	var names = d3
+		.nest()
+		.rollup(function(d) {
+			return d[0];
+		})
+		.key(function(d) {
+			return d.EN;
+		})
+		.map(data[3]);
+
 	var dateSeries = Object.keys(data[0][0]).filter(function(d) {
 		return new Date(d).toString() != 'Invalid Date';
 	});
@@ -117,10 +128,10 @@ Promise.all([ p1, p2, p3 ]).then(function(data) {
 
 	const draw = function(date) {
 		citys.forEach(function(c) {
-			drawBarchart(c.cityValue, date, c.name);
+			drawBarchart(c.cityValue, date, c.name, names);
 		});
 
-		drawBarchart(countrys, date, null);
+		drawBarchart(countrys, date, null, names);
 	};
 
 	draw(dateSeries[dateSeries.length - 1]);
@@ -134,7 +145,7 @@ Promise.all([ p1, p2, p3 ]).then(function(data) {
 	});
 });
 
-function drawBarchart(rdata, dateSeries, country) {
+function drawBarchart(rdata, dateSeries, country, names) {
 	var stage = country == 'Mainland China' ? d3.select('#stage1') : d3.select('#stage2');
 	var height = (rdata.length + 4) * 20;
 
@@ -172,7 +183,18 @@ function drawBarchart(rdata, dateSeries, country) {
 		.scalePaddingInner(0.1)
 		.scalePaddingOuter(0.5);
 
-	var axis = nChart.createAxis().topAxis(true).bottomAxis(false).xAxisGridVisible(true).xTickSize(4).yTickSize(4);
+	var axis = nChart
+		.createAxis()
+		.topAxis(true)
+		.bottomAxis(false)
+		.xAxisGridVisible(true)
+		.xTickSize(4)
+		.yTickSize(4)
+		.yTickFormat(function(d) {
+			console.log(names.get(d));
+			var n = names.get(d);
+			return !n ? d : n.JP;
+		});
 
 	var selector = stage.append('div');
 

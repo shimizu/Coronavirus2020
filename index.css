@@ -68,7 +68,7 @@ body {
 .axisLayer .tick text {
 	fill: #333333;
 	/*font-family: Oswald, sans-serif;*/
-	font-size: 14px;
+	font-size: 12px;
 	letter-spacing: .05em;
 }
 
