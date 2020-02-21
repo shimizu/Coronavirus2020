@@ -3,7 +3,7 @@ var tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('op
 var format = d3.format(',');
 var maxValue = 65000;
 var minValue = 700;
-var label = d3.select('#ui').append('div');
+var label = d3.select('#ui').append('div').attr('class', 'date');
 var labelFormat = function(s) {
 	return s.replace(/\/20/, '');
 };
