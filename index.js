@@ -168,7 +168,7 @@ function drawBarchart(rdata, dateSeries, country, names) {
 
 	var chart = nChart
 		.createHGroupBarChart()
-		.plotMargin({ top: 40, left: 140, bottom: 10, right: 60 })
+		.plotMargin({ top: 40, left: 200, bottom: 10, right: 60 })
 		.x(function(d) {
 			return d['value'];
 		})
