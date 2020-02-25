@@ -2,7 +2,7 @@ var slider = d3.select('#ui').append('input').attr('class', 'input-range');
 var tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('opacity', 0);
 var format = d3.format(',');
 var maxValue = 65000;
-var minValue = 700;
+var minValue = 1000;
 var label = d3.select('#ui').append('div').attr('class', 'date');
 var labelFormat = function(s) {
 	return s.replace(/\/20/, '');
