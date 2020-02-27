@@ -10,6 +10,9 @@ body {
 	width: 3em;
 	text-align: center;
 }
+.small {
+	font-size: 0.8em;
+}
 
 #legend {
 	padding: 0;
