@@ -29,7 +29,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			return d[0];
 		})
 		.key(function(d) {
-			return d.EN;
+			return d.EN.trim();
 		})
 		.map(data[3]);
 
@@ -190,7 +190,7 @@ function drawBarchart(rdata, dateSeries, country, names) {
 		.xTickSize(4)
 		.yTickSize(4)
 		.yTickFormat(function(d) {
-			var n = names.get(d);
+			var n = names.get(d.trim());
 			return !n ? d : n.JP;
 		});
 
