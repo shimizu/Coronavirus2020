@@ -41,7 +41,7 @@ body {
 
 .chart {
 	width: 100%;
-	background-color: #eee;
+	background-color: #fff;
 }
 .bar0 {
 	fill: gray;
@@ -130,4 +130,10 @@ div.tooltip.recovered span.value {
 }
 div.tooltip.death span.value {
 	color: red;
+}
+
+
+.guidRect {
+	fill:pink;
+	fill-opacity: 0.3;
 }
