@@ -115,6 +115,21 @@ JP	EN
 ヨルダン	Jordan
 チリ	Chile
 アルゼンチン	Argentina
+パレスチナ	Palestine
+スロベニア	Slovenia
+フランス領ギアナ	French Guiana
+ボスニア	Bosnia and Herzegovina
+マルティニーク	Martinique
+ローマ教皇庁 (バチカン)	Vatican City
+トーゴ	Togo
+スロバキア	Slovakia
+セルビア	Serbia
+ペルー	Peru
+コスタリカ	Costa Rica
+コロンビア	Colombia
+カメルーン	Cameroon
+ブータン	Bhutan
+南アフリカ	South Africa
 クルーズ船(DP)	Diamond Princess cruise ship
 未割り当て(from DP)	Unassigned Location (From Diamond Princess)
 ラックランド空軍基地(from DP)	Lackland, TX (From Diamond Princess)
@@ -131,6 +146,60 @@ JP	EN
 ボストン	Boston, MA
 マディソン	Madison, WI
 サンアントニオ	San Antonio, TX
+サンタ・クララ	Santa Clara County, CA
+クルーズ船(GP)	Grand Princess Cruise Ship
+ニューヨーク	New York County, NY
+サンフランシスコ	San Francisco County, CA
+未割り当ての場所(WA)	Unassigned Location, WA
+ハリス	Harris County, TX
+デンバー	Denver County, CO
+サミット	Summit County, CO
+フロイド	Floyd County, GA
+ナッソー	Nassau County, NY
+バーゲン	Bergen County, NJ
+プロビデンス	Providence County, RI
+ダグラス	Douglas County, CO
+サフォーク	Suffolk County, MA
+モントゴメリー	Montgomery County, MD
+フォートベンド	Fort Bend County, TX
+サラトガ	Saratoga County, NY
+ロックランド	Rockland County, NY
+ピナル	Pinal County, AZ
+リー	Lee County, FL
+フェアフィールド	Fairfield County, CT
+ブロワード	"Broward County, FL
+"
+アラメダ	Alameda County, CA
+タルサ	Tulsa County, OK
+サンタ・クルーズ	Santa Cruz County, CA
+プリマス	Plymouth County, MA
+ピアース	Pierce County, WA
+マデラ	Madera County, CA
+クラマス	Klamath County, OR
+カーショー	Kershaw County, SC
+ジェファーソン	Jefferson County, WA
+ジャクソン	Jackson County, OR
+ホノルル	Honolulu County, HI
+エル・パソ	El Paso County, CO
+デービス	Davis County, UT
+コブ	Cobb County, GA
+クラーク	Clark County, WA
+チャールストン	Charleston County, SC
+ヨロ	Yolo County, CA
+ウェイン	Wayne County, PA
+ワショー	Washoe County, NV
+ラムゼー 	Ramsey County, MN
+ミドルセックス	Middlesex County, MA
+マリオン	Marion County, IN
+ファイエット	Fayette County, KY
+ダグラス	Douglas County, NE
+デラウェア	Delaware County, PA
+チャタム	Chatham County, NC
+ウィリアムソン	Williamson County, TN
+サンタローザ	Santa Rosa County, FL
+グラント	Grant County, WA
+クラーク	Clark County, NV
+モンゴメリー	Montgomery County, TX
 シカゴ	Chicago, IL
 キング	King County, WA
 スノホミッシュ	Snohomish County, WA
@@ -158,6 +227,8 @@ JP	EN
 ロンドン(カナダ)	London, ON
 トロント	Toronto, ON
 モントリオール	 Montreal, QC
+エドモントン	Edmonton, Alberta
+カルガリー	Calgary, Alberta
 クック	Cook County, IL
 ユーマティラ	Umatilla, OR
 ソノマ	Sonoma County, CA
