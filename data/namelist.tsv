@@ -130,12 +130,23 @@ JP	EN
 カメルーン	Cameroon
 ブータン	Bhutan
 南アフリカ	South Africa
+モルディブ	Maldives
+ブルガリア	Bulgaria
+バングラデシュ	Bangladesh
+マルタ	Malta
+サン・マルタン島	St. Martin
+キプロス	Cyprus
+アルバニア	Albania
+ブルネイ	Brunei
+パラグアイ	Paraguay
+モルドバ	Moldova
 クルーズ船(DP)	Diamond Princess cruise ship
-未割り当て(from DP)	Unassigned Location (From Diamond Princess)
+未割り当ての場所(DP)	Unassigned Location (From Diamond Princess)
 ラックランド空軍基地(from DP)	Lackland, TX (From Diamond Princess)
 トラビス空軍基地(from DP)	Travis, CA (From Diamond Princess)
 オマハ	Omaha, NE (From Diamond Princess)
 サクラメント	Sacramento County, CA
+フレズノ	Fresno County, CA
 オレンジ	Orange County, CA
 ハンボルト	Humboldt County, CA
 コントラコスタ	Contra Costa County, CA
@@ -160,7 +171,42 @@ JP	EN
 プロビデンス	Providence County, RI
 ダグラス	Douglas County, CO
 サフォーク	Suffolk County, MA
-モントゴメリー	Montgomery County, MD
+モントゴメリー(PA)	Montgomery County, PA
+ジョンソン 	Johnson County, IA
+ハリソン	Harrison County, KY
+マナティ	Manatee County, FL
+ヘンドリックス	Hendricks County, IN
+ワシントンD.C.	Washington, D.C.
+フェアファックス	Fairfax County, VA
+スパータンバーグ	Spartanburg County, SC
+シャスタ	Shasta County, CA
+ジェファソン	Jefferson Parish, LA
+ジェファーソン	Jefferson County, KY
+コリン	Collin County, TX
+チェロキー	Cherokee County, GA
+シャーロット	Charlotte County, FL
+モントゴメリー (MD)	Montgomery County, MD
+カーバー	Carver County, MN
+ベニントン	Bennington County, VT
+ボルーシャ	Volusia County, FL
+不明な場所(MA)	Unknown Location, MA
+アルスター	Ulster County, NY
+サフォーク	Suffolk County, NY
+セント・ルイス	St. Louis County, MO
+スポーカン	Spokane County, WA
+シェルビー	Shelby County, TN
+リバーサイド	Riverside County, CA
+ポーク	Polk County, GA
+オカルーサ	Okaloosa County, FL
+マリオン	Marion County, OR
+キッティタス	Kittitas County, WA
+ジョンソン	Johnson County, KS
+ハドソン	Hudson County, NJ
+ハーフォード	Harford County, MD
+ダグラス	Douglas County, OR
+デイヴィッドソン	Davidson County, TN
+バークシャー	Berkshire County, MA
+ロッキンガム	Rockingham County, NH
 フォートベンド	Fort Bend County, TX
 サラトガ	Saratoga County, NY
 ロックランド	Rockland County, NY
@@ -225,6 +271,9 @@ JP	EN
 ビクトリア	Victoria
 ブリティッシュコロンビア	British Columbia
 ロンドン(カナダ)	London, ON
+オンタリオ	Ontario
+アルバータ	Alberta
+ケベック・シティー	Quebec
 トロント	Toronto, ON
 モントリオール	 Montreal, QC
 エドモントン	Edmonton, Alberta
