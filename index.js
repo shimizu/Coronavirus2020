@@ -1,9 +1,9 @@
-var slider = d3.select('#ui').append('input').attr('class', 'input-range');
+var stage = d3.select("#stage");
 var tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('opacity', 0);
 var format = d3.format(',');
 var maxValue = 70000;
 var minValue = 8000;
-var label = d3.select('#ui').append('div').attr('class', 'date');
+var tickArray = []
 var labelFormat = function(s) {
 	return s.replace(/\/20/, '');
 };
@@ -23,6 +23,8 @@ var p3 = d3.csv('data/time_series_19-covid-Deaths.csv', cast);
 var p4 = d3.tsv('data/namelist.tsv');
 
 Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
+
+
 	var names = d3
 		.nest()
 		.rollup(function(d) {
@@ -37,15 +39,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 		return new Date(d).toString() != 'Invalid Date';
 	});
 
-	slider
-		.attr('type', 'range')
-		.attr('min', 0)
-		.attr('max', dateSeries.length - 1)
-		.attr('step', 1)
-		.attr('value', dateSeries.length - 1)
-		.style('width', '98%');
-
-	label.text(labelFormat(dateSeries[dateSeries.length - 1]));
+	tickArray = dateSeries.filter(function(l, i){ return i % 3 == 0 })
 
 	var nConfi = d3
 		.nest()
@@ -72,174 +66,175 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 		var confi = nConfi.get(key);
 		var recov = nRecov.get(key);
 		var death = nDeath.get(key);
-		if (confi.length > 1) {
-			var nnConfi = d3
-				.nest()
-				.key(function(d) {
-					return d['Province/State'];
-				})
-				.map(confi);
-			var nnRecov = d3
-				.nest()
-				.key(function(d) {
-					return d['Province/State'];
-				})
-				.map(recov);
-			var nnDeath = d3
-				.nest()
-				.key(function(d) {
-					return d['Province/State'];
-				})
-				.map(death);
 
-			var nnkeys = d3.set(nnConfi.keys().concat(nnRecov.keys().concat(nnDeath.keys()))).values();
+		if(confi.length > 1){
+			//console.log(key, confi)
+			var tmpConfi = {};
+			confi.forEach(function(con){
+				dateSeries.forEach(function(date){
+					if(!tmpConfi[date]) tmpConfi[date]  = 0;
+					tmpConfi[date] += con[date]
+				});
+			})
+			tmpConfi = Object.keys(tmpConfi).map(function(k){ return {"date":k,"type":"Confirmed", "value":tmpConfi[k]} } );
 
+			var tmpRecov = {};
+			recov.forEach(function(con){
+				dateSeries.forEach(function(date){
+					if(!tmpRecov[date]) tmpRecov[date]  = 0;
+					tmpRecov[date] += con[date]
+				});
+			})
+			tmpRecov = Object.keys(tmpRecov).map(function(k){ return {"date":k,"type":"Recovered", "value":tmpRecov[k]} } );			
+
+
+			var tmpDeath = {};
+			death.forEach(function(con){
+				dateSeries.forEach(function(date){
+					if(!tmpRecov[date]) tmpDeath[date]  = 0;
+					tmpDeath[date] += con[date]
+				});
+			})
+			tmpDeath = Object.keys(tmpDeath).map(function(k){ return {"date":k,"type":"death", "value":tmpDeath[k]} } );			
+
+			tmpConfi.reduce(function(acc, cur, i){
+				if(i === 1) acc.diff = acc.value;	
+				cur.diff = cur.value - acc.value 
+				return cur;
+			});				
+			tmpRecov.reduce(function(acc, cur, i){
+				if(i === 1) acc.diff = acc.value;	
+				cur.diff = cur.value - acc.value 
+				return cur;
+			});	
+			tmpDeath.reduce(function(acc, cur, i){
+				if(i === 1) acc.diff = acc.value;	
+				cur.diff = cur.value - acc.value 
+				return cur;
+			});			
+
+			var matchName = names.get(key.trim())
 			return {
-				name: key,
-				cityValue: nnkeys.map(function(nnkey) {
-					var nnconfi = nnConfi.get(nnkey);
-					var nnrecov = nnRecov.get(nnkey);
-					var nndeath = nnDeath.get(nnkey);
-					return { name: nnkey, confirmed: nnconfi[0], recovered: nnrecov[0], death: nndeath[0] };
-				})
+				key:  (matchName) ? matchName.JP :  key ,
+				confSum:d3.max(tmpConfi, function(d){ return  d.value }),
+				values: [tmpConfi, tmpRecov, tmpDeath ].flat()
 			};
-		} else {
+;
+
+		}else{
+			var tmpConfi = dateSeries.map(function(k){ return {"date":k, "type":"Confirmed", "value":confi[0][k]} });
+			var tmpRecov = dateSeries.map(function(k){ return {"date":k, "type":"Recovered", "value":recov[0][k]} });
+			var tmpDeath = dateSeries.map(function(k){ return {"date":k, "type":"death", "value":death[0][k]} });
+			
+			tmpConfi.reduce(function(acc, cur, i){
+				if(i === 1) acc.diff = acc.value;	
+				cur.diff = cur.value - acc.value 
+				return cur;
+			});				
+			tmpRecov.reduce(function(acc, cur, i){
+				if(i === 1) acc.diff = acc.value;	
+				cur.diff = cur.value - acc.value 
+				return cur;
+			});	
+			tmpDeath.reduce(function(acc, cur, i){
+				if(i === 1) acc.diff = acc.value;	
+				cur.diff = cur.value - acc.value 
+				return cur;
+			});				
+			var matchName = names.get(key.trim())
 			return {
-				name: confi[0]['Province/State'] || key,
-				confirmed: confi[0],
-				recovered: recov[0],
-				death: death[0]
+				key: (matchName) ? matchName.JP :  key ,
+				confSum:d3.max(tmpConfi, function(d){ return  d.value }),
+				values: [tmpConfi, tmpRecov, tmpDeath ].flat()
+
 			};
 		}
+
 	});
 
-	var citys = sumData.filter(function(d) {
-		return d.cityValue;
+	sumData.sort(function(a,b){return b.confSum - a.confSum})
+	sumData.filter(function(d){ return d.confSum > 10}).forEach(function(countryData){
+		drawBarchart(countryData);
 	});
+		
 
-	var countrys = sumData.filter(function(d) {
-		return !d.cityValue;
-	});
-
-	citys.sort(function(a, b) {
-		return b.cityValue.length - a.cityValue.length;
-	});
-
-	const draw = function(date) {
-		citys.forEach(function(c) {
-			drawBarchart(c.cityValue, date, c.name, names);
-		});
-
-		drawBarchart(countrys, date, null, names);
-	};
-
-	draw(dateSeries[dateSeries.length - 1]);
-
-	slider.on('input', function() {
-		label.text(labelFormat(dateSeries[this.value]));
-		d3.select('#stage1').html('');
-		d3.select('#stage2').html('');
-
-		draw(dateSeries[this.value]);
-	});
 });
 
-function drawBarchart(rdata, dateSeries, country, names) {
-	var stage = country == 'Mainland China' ? d3.select('#stage1') : d3.select('#stage2');
-	var height = (rdata.length + 4) * 20;
+function drawBarchart(countryData) {
+	//console.log(countryData.key, countryData)
 
-	var confirmed = rdata
-		.map(function(d) {
-			return { name: d.name, type: 'confirmed', date: dateSeries, value: d.confirmed[dateSeries] };
-		})
-		.sort(function(a, b) {
-			return a.value - b.value;
-		});
-	var recovered = rdata.map(function(d) {
-		return { name: d.name, type: 'recovered', date: dateSeries, value: d.recovered[dateSeries] };
-	});
-	var death = rdata.map(function(d) {
-		return { name: d.name, type: 'death', date: dateSeries, value: d.death[dateSeries] };
-	});
+	var confSum = countryData.confSum;
+	var domain = [0, 10];
+	if(confSum > 10) domain = [0, 100];
+	if(confSum > 100) domain = [0, 500];
+	if(confSum > 500) domain = [0, 1000];
+	if(confSum > 1000) domain = [0, 5000];
+	if(confSum > 5000) domain = [0, 20000];
 
-	var maxDomain = country == 'Mainland China' ? maxValue : minValue;
+	if(confSum > 20000) domain = [0, 30000];
+	if(confSum > 30000) domain = [0, 40000];
+	if(confSum > 40000) domain = [0, 50000];
+	if(confSum > 50000) domain = [0, 60000];
+	if(confSum > 60000) domain = [0, 70000];
+	if(confSum > 70000) domain = [0, 80000];
+	if(confSum > 80000) domain = [0, 90000];
+	if(confSum > 90000) domain = [0, 100000];
 
-	var data = confirmed.concat(recovered.concat(death));
+	var data = countryData.values;
 
-	var chart = nChart
-		.createHGroupBarChart()
-		.plotMargin({ top: 40, left: 200, bottom: 10, right: 60 })
-		.x(function(d) {
-			return d['value'];
-		})
-		.xScaleDomain([ 0, maxDomain ])
-		.y(function(d) {
-			return d['name'];
-		})
-		.group(function(d) {
-			return d['type'];
-		})
-		.scalePaddingInner(0.1)
-		.scalePaddingOuter(0.5);
+	var chartArea = stage.append("div")
+	chartArea.append("h1").text(countryData.key)
+	
+	var chartBody = chartArea.append("div").attr("class", "chart")
 
-	var axis = nChart
-		.createAxis()
-		.topAxis(true)
-		.bottomAxis(false)
-		.xAxisGridVisible(true)
-		.xTickSize(4)
-		.yTickSize(4)
-		.yTickFormat(function(d) {
-			var n = names.get(d.trim());
-			return !n ? d : n.JP;
-		});
+		
+		var chart = nChart.createVGroupBarChart()
+			.plotMargin({top:20, left:80, bottom:20, right:80})
+			.x(function(d){ return d["date"] })
+			.y(function(d){ return d["value"] })
+			.yScaleDomain(domain)
+			.group(function(d){ return d["type"] })
+			.scalePaddingInner(0.1)
+			.scalePaddingOuter(0)
+	
+			
+		var axis = nChart.createAxis()
+			.yAxisGridVisible(true)        
+			.xTickSize(5)
+			.xTickValues(tickArray)
+			.xTickSizeInner(8)
+			.xTickSizeOuter(0)
+			.yTickFormat(function(t){ return format(t)})
+			.xTickFormat(function(t){ return labelFormat(t) });			
 
-	var tmpSelector = stage.append('div');
 
-	tmpSelector.append('h2').text(country || 'Other');
+		var selector = chartBody
+			.datum(data)
+			.call(chart)
+			.call(axis)
 
-	var selector = tmpSelector
-		.append('div')
-		.style('height', height)
-		.attr('class', 'chart ' + country)
-		.datum(data)
-		.call(chart)
-		.call(axis);
 
-	selector
-		.select('.plotLayer')
-		.selectAll('.bar')
-		.on('mouseover', function(d) {
-			var html = '';
-
-			html += '<span>' + d.name + '</span>';
-			html += '<span class="value">' + d.type + '</span>';
-			html += '<span>' + format(d.value) + '</>';
-
-			tooltip.attr('class', 'tooltip ' + d.type);
-			tooltip.transition().duration(200).style('opacity', 1);
-			tooltip.html(html).style('left', d3.event.pageX + 10 + 'px').style('top', d3.event.pageY - 28 + 'px');
-		})
-		.on('mouseout', function(d) {
-			tooltip.transition().duration(500).style('opacity', 0);
-		});
-
-	const setBackGround = function(selector, width) {
 		selector
-			.selectAll('.plotLayer')
-			.insert('rect', ':first-child')
-			.attr('class', 'guidRect')
-			.attr('width', width)
-			.attr('height', '100%')
-			.attr('x', 0)
-			.attr('y', 0);
-	};
-
-	var xScale = selector._xScale;
-	setBackGround(selector, xScale(minValue));
-
-	selector.on('resize', function() {
-		var xScale = selector._xScale;
-		selector.select('.guidRect').attr('width', xScale(minValue));
-	});
+			.select('.plotLayer')
+			.selectAll('.bar')
+			.on('mouseover', function(d) {
+				var html = '';
+	
+				console.log(d)
+				html += '<div>' + labelFormat(d.date) + '</div>';
+				html += '<div>' + d.type + '</div>';
+				html += "<div>";
+				html += '<span>新規：</span><span>' + format(d.value) + '</span>';
+				html += "</div>";
+				html += "<div>";
+				html += '<span>累計：</span><span>' + format(d.diff) + '</span>';
+				html += "</div>";
+	
+				tooltip.attr('class', 'tooltip ' + d.type);
+				tooltip.transition().duration(200).style('opacity', 1);
+				tooltip.html(html).style('left', d3.event.pageX + 10 + 'px').style('top', d3.event.pageY - 28 + 'px');
+			})
+			.on('mouseout', function(d) {
+				//tooltip.transition().duration(500).style('opacity', 0);
+			});			
 }

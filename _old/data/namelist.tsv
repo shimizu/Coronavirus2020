@@ -34,10 +34,8 @@ JP	EN
 香港	Hong Kong
 マカオ	Macau
 台湾	Taiwan
-台湾	Taiwan*
 日本	Japan
 韓国	South Korea
-韓国	Korea, South
 ベトナム	Vietnam
 シンガポール	Singapore
 豪州	Australia
@@ -51,8 +49,7 @@ JP	EN
 スイス	Switzerland
 クロアチア	Croatia
 アルジェリア	Algeria
-アメリカ	United States
-アメリカ	US
+米国	United States
 カナダ	Canada
 フランス	France
 フィンランド	Finland
@@ -62,7 +59,6 @@ JP	EN
 スペイン	Spain
 スウェーデン	Sweden
 イギリス	UK
-イギリス	United Kingdom
 ベルギー	Belgium
 アラブ首長国連邦	United Arab Emirates
 エジプト	Egypt
@@ -87,7 +83,6 @@ JP	EN
 デンマーク	Denmark
 パキスタン	Pakistan
 チェコ	Czech Republic
-チェコ	Czechia
 アゼルバイジャン	Azerbaijan
 カタール	Qatar
 アイスランド	Iceland
@@ -145,7 +140,6 @@ JP	EN
 ブルネイ	Brunei
 パラグアイ	Paraguay
 モルドバ	Moldova
-クルーズ船	Cruise Ship
 クルーズ船(DP)	Diamond Princess cruise ship
 未割り当ての場所(DP)	Unassigned Location (From Diamond Princess)
 ラックランド空軍基地(from DP)	Lackland, TX (From Diamond Princess)

@@ -1,0 +1,41 @@
+<html>
+
+<head>
+    <title>コロナウイルスの確定症例数推移</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="contents">
+        <h1>コロナウイルスの確定症例数推移</h1>
+        <ul id="legend">
+            <li class="confirmed">Confirmed</li>
+            <li class="recovered">Recovered</li>
+            <li class="death">Death</li>
+        </ul>
+        <p class="small">＊マウスをバーに重ねると詳細情報を確認できます。</p>
+        <div class="stage" id="stage1">
+        </div>
+        <div class="stage" id="stage2"></div>
+        <div>
+
+            <p>source: <a
+                    href="https://gisanddata.maps.arcgis.com/apps/opsdashboard/index.html#/bda7594740fd40299423467b48e9ecf6">Coronavirus
+                    2019-nCoV</a>
+                , <a
+                    href="https://github.com/CSSEGISandData/COVID-19">time_series_2019-ncov</a>
+            </p>
+            <p>作った人: <a href="https://twitter.com/_shimizu">@_shimizu/Twitter</a></p>
+            <p>Blog: <a href="https://shimz.me/blog/datavis/6684">コロナウイルスの確定症例数推移を棒グラフにしてみた。</a></p>
+        </div>
+    </div>
+    <div id="ui">
+    </div>
+
+
+    <script src='//unpkg.com/d3@5.0.0/dist/d3.min.js'></script>
+    <script src="nChart.js"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>
