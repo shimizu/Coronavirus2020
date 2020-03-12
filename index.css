@@ -11,6 +11,9 @@ h2 {
 	width: 80%;
 	margin-left: 2.5%;
 }
+.lastdata {
+	font-size: 12px;
+}
 .date {
 	font-size: 34px;
 	margin: 0 auto;

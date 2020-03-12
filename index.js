@@ -4,7 +4,7 @@ var format = d3.format(',');
 var maxValue = 70000;
 var minValue = 8000;
 var tickArray = []
-var labelFormat = function(s) {
+var dateFormat = function(s) {
 	return s.replace(/\/20/, '');
 };
 
@@ -30,6 +30,9 @@ var typeFormat = {
 var p1 = d3.csv('data/time_series_19-covid-Confirmed.csv', cast);
 var p2 = d3.csv('data/time_series_19-covid-Recovered.csv', cast);
 var p3 = d3.csv('data/time_series_19-covid-Deaths.csv', cast);
+
+
+https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv
 var p4 = d3.tsv('data/namelist.tsv');
 
 Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
@@ -48,6 +51,8 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 	var dateSeries = Object.keys(data[0][0]).filter(function(d) {
 		return new Date(d).toString() != 'Invalid Date';
 	});
+
+	var lastDate = dateSeries[dateSeries.length-1]
 
 	tickArray = dateSeries.filter(function(l, i){ return i % 3 == 0 })
 
@@ -136,7 +141,10 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			var matchName = names.get(key.trim())
 			return {
 				key:  (matchName) ? matchName.JP :  key ,
-				confSum:d3.max(tmpConfi, function(d){ return  d.value }),
+				lastDate:lastDate,
+				confirmed:d3.max(tmpConfi, function(d){ return  d.value }), 
+				recovered:d3.max(tmpRecov, function(d){ return  d.value }),
+				death:d3.max(tmpDeath, function(d){ return  d.value }),
 				values: [tmpConfi, tmpRecov, tmpDeath ].flat()
 			};
 ;
@@ -169,7 +177,10 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			var matchName = names.get(key.trim())
 			return {
 				key: (matchName) ? matchName.JP :  key ,
-				confSum:d3.max(tmpConfi, function(d){ return  d.value }), 
+				lastDate:lastDate,
+				confirmed:d3.max(tmpConfi, function(d){ return  d.value }), 
+				recovered:d3.max(tmpRecov, function(d){ return  d.value }),
+				death:d3.max(tmpDeath, function(d){ return  d.value }),
 				values: [tmpConfi, tmpRecov, tmpDeath ].flat()
 
 			};
@@ -179,10 +190,10 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 
 
 	//感染者数の累計を元に降順にならべかえる。
-	margeData.sort(function(a,b){return b.confSum - a.confSum})
+	margeData.sort(function(a,b){return b.confirmed - a.confirmed})
 
 	margeData
-		.filter(function(d){ return d.confSum > 10}) //ひとまず感染者数の累計が10人以上の国を対象とする
+		.filter(function(d){ return d.confirmed > 10}) //ひとまず感染者数の累計が10人以上の国を対象とする
 		.forEach(function(countryData){
 			//対象国のデータをチャートとして描画
 			drawBarchart(countryData);
@@ -193,29 +204,32 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 
 function drawBarchart(countryData) {
 
-	var confSum = countryData.confSum;
+	var confirmed = countryData.confirmed;
 	var domain = [0, 10];
 
 	//Y軸の最大値を調整 todo:あとでfix 
-	if(confSum > 10) domain = [0, 100];
-	if(confSum > 100) domain = [0, 500];
-	if(confSum > 500) domain = [0, 1000];
-	if(confSum > 1000) domain = [0, 5000];
-	if(confSum > 5000) domain = [0, 20000];
+	if(confirmed > 10) domain = [0, 100];
+	if(confirmed > 100) domain = [0, 500];
+	if(confirmed > 500) domain = [0, 1000];
+	if(confirmed > 1000) domain = [0, 5000];
+	if(confirmed > 5000) domain = [0, 20000];
 
-	if(confSum > 20000) domain = [0, 30000];
-	if(confSum > 30000) domain = [0, 40000];
-	if(confSum > 40000) domain = [0, 50000];
-	if(confSum > 50000) domain = [0, 60000];
-	if(confSum > 60000) domain = [0, 70000];
-	if(confSum > 70000) domain = [0, 80000];
-	if(confSum > 80000) domain = [0, 90000];
-	if(confSum > 90000) domain = [0, 100000];
+	if(confirmed > 20000) domain = [0, 30000];
+	if(confirmed > 30000) domain = [0, 40000];
+	if(confirmed > 40000) domain = [0, 50000];
+	if(confirmed > 50000) domain = [0, 60000];
+	if(confirmed > 60000) domain = [0, 70000];
+	if(confirmed > 70000) domain = [0, 80000];
+	if(confirmed > 80000) domain = [0, 90000];
+	if(confirmed > 90000) domain = [0, 100000];
 
 	var data = countryData.values;
 
 	var chartArea = stage.append("div") ;
 	chartArea.append("h1").text(countryData.key);
+	var lastData =  dateFormat(countryData.lastDate)+"- 感染者:"+ format(countryData.confirmed)+
+	 " 回復数:"+ format(countryData.recovered) + " 死亡数:" + format(countryData.death);
+	chartArea.append("p").attr("class", "lastdata").text(lastData)
 	
 	var chartBody = chartArea.append("div").attr("class", "chart");
 
@@ -237,7 +251,7 @@ function drawBarchart(countryData) {
 			.xTickSizeInner(8)
 			.xTickSizeOuter(0)
 			.yTickFormat(function(t){ return format(t)})
-			.xTickFormat(function(t){ return labelFormat(t) });			
+			.xTickFormat(function(t){ return dateFormat(t) });			
 
 
 		var selector = chartBody
@@ -253,13 +267,13 @@ function drawBarchart(countryData) {
 				var html = '';
 	
 				//console.log(d)
-				html += '<div>' + labelFormat(d.date) + '</div>';
+				html += '<div>' + dateFormat(d.date) + '</div>';
 				html += '<div class="'+d.type+'">' + typeFormat[d.type] + '</div>';
 				html += '<div class="data">';
-				html += '<span>新規：</span><span>' + format(d.value) + '</span>';
+				html += '<span>新規：</span><span>' + format(d.diff) + '</span>';
 				html += "</div>";
 				html += '<div class="data">';
-				html += '<span>累計：</span><span>' + format(d.diff) + '</span>';
+				html += '<span>累計：</span><span>' + format(d.value) + '</span>';
 				html += "</div>";
 	
 				tooltip.attr('class', 'tooltip');
