@@ -21,6 +21,12 @@ var cast = function(d) {
 	return d;
 };
 
+var typeFormat = {
+	Confirmed:"感染者数",
+	Recovered:"回復者数",
+	death:"死亡者数"
+}
+
 var p1 = d3.csv('data/time_series_19-covid-Confirmed.csv', cast);
 var p2 = d3.csv('data/time_series_19-covid-Recovered.csv', cast);
 var p3 = d3.csv('data/time_series_19-covid-Deaths.csv', cast);
@@ -45,6 +51,8 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 
 	tickArray = dateSeries.filter(function(l, i){ return i % 3 == 0 })
 
+
+	//国ごとにグルーピング
 	var nConfi = d3
 		.nest()
 		.key(function(d) {
@@ -64,15 +72,20 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 		})
 		.map(data[2]);
 
-	var keys = d3.set(nConfi.keys().concat(nRecov.keys().concat(nDeath.keys()))).values();
+	//感染者数、回復者数、死亡者数の各データから国名を取得してまとめてから重複を削除してユニークな名前のリストを作っている
+	//現在は必要ないが、以前シートに掲載されている国名にばらつきがあったため一応入れている
+	var countrykeys = d3.set(nConfi.keys().concat(nRecov.keys().concat(nDeath.keys()))).values();
 
-	var sumData = keys.map(function(key) {
+	//感染者数、回復者数、死亡者数のデータをマージ
+	var margeData = countrykeys.map(function(key) {
 		var confi = nConfi.get(key);
 		var recov = nRecov.get(key);
 		var death = nDeath.get(key);
 
 		if(confi.length > 1){
-			//console.log(key, confi)
+			//複数のcityデータがある場合は、一国としてまとめる
+
+			//日付を基準にして各都市の感染者数を合計
 			var tmpConfi = {};
 			confi.forEach(function(con){
 				dateSeries.forEach(function(date){
@@ -82,6 +95,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			})
 			tmpConfi = Object.keys(tmpConfi).map(function(k){ return {"date":k,"type":"Confirmed", "value":tmpConfi[k]} } );
 
+			//日付を基準にして各都市の回復者数を合計
 			var tmpRecov = {};
 			recov.forEach(function(con){
 				dateSeries.forEach(function(date){
@@ -92,6 +106,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			tmpRecov = Object.keys(tmpRecov).map(function(k){ return {"date":k,"type":"Recovered", "value":tmpRecov[k]} } );			
 
 
+			//日付を基準にして各都市の死亡者数を合計
 			var tmpDeath = {};
 			death.forEach(function(con){
 				dateSeries.forEach(function(date){
@@ -101,6 +116,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			})
 			tmpDeath = Object.keys(tmpDeath).map(function(k){ return {"date":k,"type":"death", "value":tmpDeath[k]} } );			
 
+			//累計値を前日の値と比較して各日付ごとの新規数を算出する
 			tmpConfi.reduce(function(acc, cur, i){
 				if(i === 1) acc.diff = acc.value;	
 				cur.diff = cur.value - acc.value 
@@ -126,10 +142,15 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 ;
 
 		}else{
+			//cityデータをまとめる必要がない国はこちらで処理する
+
+
+			//日付ごとにデータをまとめる
 			var tmpConfi = dateSeries.map(function(k){ return {"date":k, "type":"Confirmed", "value":confi[0][k]} });
 			var tmpRecov = dateSeries.map(function(k){ return {"date":k, "type":"Recovered", "value":recov[0][k]} });
 			var tmpDeath = dateSeries.map(function(k){ return {"date":k, "type":"death", "value":death[0][k]} });
 			
+			//累計値を前日の値と比較して各日付ごとの新規数を算出する
 			tmpConfi.reduce(function(acc, cur, i){
 				if(i === 1) acc.diff = acc.value;	
 				cur.diff = cur.value - acc.value 
@@ -148,7 +169,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			var matchName = names.get(key.trim())
 			return {
 				key: (matchName) ? matchName.JP :  key ,
-				confSum:d3.max(tmpConfi, function(d){ return  d.value }),
+				confSum:d3.max(tmpConfi, function(d){ return  d.value }), 
 				values: [tmpConfi, tmpRecov, tmpDeath ].flat()
 
 			};
@@ -156,19 +177,26 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 
 	});
 
-	sumData.sort(function(a,b){return b.confSum - a.confSum})
-	sumData.filter(function(d){ return d.confSum > 10}).forEach(function(countryData){
-		drawBarchart(countryData);
-	});
+
+	//感染者数の累計を元に降順にならべかえる。
+	margeData.sort(function(a,b){return b.confSum - a.confSum})
+
+	margeData
+		.filter(function(d){ return d.confSum > 10}) //ひとまず感染者数の累計が10人以上の国を対象とする
+		.forEach(function(countryData){
+			//対象国のデータをチャートとして描画
+			drawBarchart(countryData);
+		});
 		
 
 });
 
 function drawBarchart(countryData) {
-	//console.log(countryData.key, countryData)
 
 	var confSum = countryData.confSum;
 	var domain = [0, 10];
+
+	//Y軸の最大値を調整 todo:あとでfix 
 	if(confSum > 10) domain = [0, 100];
 	if(confSum > 100) domain = [0, 500];
 	if(confSum > 500) domain = [0, 1000];
@@ -186,10 +214,10 @@ function drawBarchart(countryData) {
 
 	var data = countryData.values;
 
-	var chartArea = stage.append("div")
-	chartArea.append("h1").text(countryData.key)
+	var chartArea = stage.append("div") ;
+	chartArea.append("h1").text(countryData.key);
 	
-	var chartBody = chartArea.append("div").attr("class", "chart")
+	var chartBody = chartArea.append("div").attr("class", "chart");
 
 		
 		var chart = nChart.createVGroupBarChart()
@@ -199,7 +227,7 @@ function drawBarchart(countryData) {
 			.yScaleDomain(domain)
 			.group(function(d){ return d["type"] })
 			.scalePaddingInner(0.1)
-			.scalePaddingOuter(0)
+			.scalePaddingOuter(0);
 	
 			
 		var axis = nChart.createAxis()
@@ -215,7 +243,7 @@ function drawBarchart(countryData) {
 		var selector = chartBody
 			.datum(data)
 			.call(chart)
-			.call(axis)
+			.call(axis);
 
 
 		selector
@@ -224,21 +252,21 @@ function drawBarchart(countryData) {
 			.on('mouseover', function(d) {
 				var html = '';
 	
-				console.log(d)
+				//console.log(d)
 				html += '<div>' + labelFormat(d.date) + '</div>';
-				html += '<div>' + d.type + '</div>';
-				html += "<div>";
+				html += '<div class="'+d.type+'">' + typeFormat[d.type] + '</div>';
+				html += '<div class="data">';
 				html += '<span>新規：</span><span>' + format(d.value) + '</span>';
 				html += "</div>";
-				html += "<div>";
+				html += '<div class="data">';
 				html += '<span>累計：</span><span>' + format(d.diff) + '</span>';
 				html += "</div>";
 	
-				tooltip.attr('class', 'tooltip ' + d.type);
+				tooltip.attr('class', 'tooltip');
 				tooltip.transition().duration(200).style('opacity', 1);
 				tooltip.html(html).style('left', d3.event.pageX + 10 + 'px').style('top', d3.event.pageY - 28 + 'px');
 			})
 			.on('mouseout', function(d) {
-				//tooltip.transition().duration(500).style('opacity', 0);
+				tooltip.transition().duration(500).style('opacity', 0);
 			});			
 }

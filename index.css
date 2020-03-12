@@ -2,6 +2,14 @@ html,
 body {
 	width: 100%;
 	height: 100%;
+	font-family:"Source Sans Pro",-apple-system,BlinkMacSystemFont,'Hiragino Sans','Hiragino Kaku Gothic ProN',Meiryo,sans-serif
+}
+h2 {
+	margin: 0;
+}
+.description {
+	width: 80%;
+	margin-left: 2.5%;
 }
 .date {
 	font-size: 34px;
@@ -15,6 +23,7 @@ body {
 }
 
 #legend {
+	margin-top: 40px;
 	padding: 0;
 }
 #legend li {
@@ -120,15 +129,18 @@ div.tooltip {
 div.tooltip div {
 	text-align: center;
 }
-div.tooltip.Confirmed span.value {
+div.tooltip .Confirmed {
 	color: gray;
 }
 
-div.tooltip.recovered span.value {
-	color: lime;
+div.tooltip .recovered {
+	color: green;
 }
-div.tooltip.death span.value {
+div.tooltip .death{
 	color: red;
+}
+div.tooltip .data{
+	text-align: left;
 }
 
 
