@@ -14,6 +14,10 @@ var cast = function(d) {
 		if (!d[key] && d[key] === '') d[key] = 0;
 	});
 
+	if(d["Country/Region"] === "China") d["Country/Region"] = "China(Other)";
+	if(d["Province/State"] === "Hubei") d["Country/Region"] = "China(Hubei)";
+
+
 	return d;
 };
 
