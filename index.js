@@ -227,7 +227,7 @@ function drawBarchart(countryData) {
 
 	var chartArea = stage.append("div") ;
 	chartArea.append("h1").text(countryData.key);
-	var lastData =  dateFormat(countryData.lastDate)+"- 感染者:"+ format(countryData.confirmed)+
+	var lastData =  "累計("+dateFormat(countryData.lastDate)+"時点) - 感染者:"+ format(countryData.confirmed)+
 	 " 回復数:"+ format(countryData.recovered) + " 死亡数:" + format(countryData.death);
 	chartArea.append("p").attr("class", "lastdata").text(lastData)
 	
