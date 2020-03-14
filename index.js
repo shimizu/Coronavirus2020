@@ -1,5 +1,6 @@
 var stage = d3.select("#stage");
 var tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('opacity', 0);
+var btn = d3.select(".button-radio");
 var format = d3.format(',');
 var maxValue = 70000;
 var minValue = 8000;
@@ -192,36 +193,33 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 	//感染者数の累計を元に降順にならべかえる。
 	margeData.sort(function(a,b){return b.confirmed - a.confirmed})
 
-	margeData
+	var targetdata = margeData
 		.filter(function(d){ return d.confirmed > 10}) //ひとまず感染者数の累計が10人以上の国を対象とする
-		.forEach(function(countryData){
+		
+		
+		targetdata.forEach(function(countryData){
 			//対象国のデータをチャートとして描画
-			drawBarchart(countryData);
+			drawBarchart(countryData, "value");
 		});
 		
 
+
+	btn.on("change", function(){
+		xIndex = btn.selectAll("input").nodes().filter(d => d.checked)[0].value;
+		d3.select("#stage").selectAll("div").remove()
+		targetdata.forEach(function(countryData){
+			//対象国のデータをチャートとして描画
+			drawBarchart(countryData, xIndex);
+		});
+				
+
+	});		
+
 });
 
-function drawBarchart(countryData) {
+function drawBarchart(countryData, index) {
 
 	var confirmed = countryData.confirmed;
-	var domain = [0, 10];
-
-	//Y軸の最大値を調整 todo:あとでfix 
-	if(confirmed > 10) domain = [0, 100];
-	if(confirmed > 100) domain = [0, 500];
-	if(confirmed > 500) domain = [0, 1000];
-	if(confirmed > 1000) domain = [0, 5000];
-	if(confirmed > 5000) domain = [0, 20000];
-
-	if(confirmed > 20000) domain = [0, 30000];
-	if(confirmed > 30000) domain = [0, 40000];
-	if(confirmed > 40000) domain = [0, 50000];
-	if(confirmed > 50000) domain = [0, 60000];
-	if(confirmed > 60000) domain = [0, 70000];
-	if(confirmed > 70000) domain = [0, 80000];
-	if(confirmed > 80000) domain = [0, 90000];
-	if(confirmed > 90000) domain = [0, 100000];
 
 	var data = countryData.values;
 
@@ -237,8 +235,8 @@ function drawBarchart(countryData) {
 		var chart = nChart.createVGroupBarChart()
 			.plotMargin({top:20, left:80, bottom:20, right:80})
 			.x(function(d){ return d["date"] })
-			.y(function(d){ return d["value"] })
-			.yScaleDomain(domain)
+			.y(function(d){ return d[index] })
+			//.yScaleDomain(domain)
 			.group(function(d){ return d["type"] })
 			.scalePaddingInner(0.1)
 			.scalePaddingOuter(0);
