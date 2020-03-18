@@ -156,23 +156,26 @@ div.tooltip .data{
 
 .button-radio {
 	margin: 10px;
-  }
+}
+.button-radio label:hover {
+	cursor: pointer;
+}  
 
-  .button-radio input[type="radio"] {
-	display:none; 
-  }
+.button-radio input[type="radio"] {
+display:none; 
+}
 
-  .button-radio label {
-	width: 100px;
-	text-align: center;
-	display:inline-block;
-	color:#000;
-	border: 1px solid black;
-	background-color:#fff;
-	padding:5px 10px;
-  }
+.button-radio label {
+width: 100px;
+text-align: center;
+display:inline-block;
+color:#000;
+border: 1px solid black;
+background-color:#fff;
+padding:5px 10px;
+}
 
-  .button-radio input[type="radio"]:checked + label {
-	color:white;
-	background-color:#000;
-  }
+.button-radio input[type="radio"]:checked + label {
+color:white;
+background-color:#000;
+}
