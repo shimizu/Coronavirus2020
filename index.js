@@ -194,7 +194,7 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 	margeData.sort(function(a,b){return b.confirmed - a.confirmed})
 
 	var targetdata = margeData
-		.filter(function(d){ return d.confirmed > 10}) //ひとまず感染者数の累計が10人以上の国を対象とする
+		.filter(function(d){ return d.confirmed > 100}) //ひとまず感染者数の累計が10人以上の国を対象とする
 		
 		
 		targetdata.forEach(function(countryData){
