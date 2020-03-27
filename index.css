@@ -90,7 +90,7 @@ h2 {
 }
 .axisLayer .tick text {
 	fill: #333333;
-	/*font-family: Oswald, sans-serif;*/
+	font-family: Oswald, sans-serif;
 	font-size: 12px;
 	letter-spacing: .05em;
 }

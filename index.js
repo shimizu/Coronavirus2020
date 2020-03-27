@@ -28,16 +28,14 @@ var typeFormat = {
 	death:"死亡者数"
 }
 
-var p1 = d3.csv('data/time_series_19-covid-Confirmed.csv', cast);
-var p2 = d3.csv('data/time_series_19-covid-Recovered.csv', cast);
-var p3 = d3.csv('data/time_series_19-covid-Deaths.csv', cast);
+var p1 = d3.csv('data/time_series_covid19_confirmed_global.csv', cast);
+var p2 = d3.csv('data/time_series_covid19_recovered_global.csv', cast);
+var p3 = d3.csv('data/time_series_covid19_deaths_global.csv', cast);
 
 
-https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv
 var p4 = d3.tsv('data/namelist.tsv');
 
 Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
-
 
 	var names = d3
 		.nest()
@@ -78,6 +76,8 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 		})
 		.map(data[2]);
 
+	
+
 	//感染者数、回復者数、死亡者数の各データから国名を取得してまとめてから重複を削除してユニークな名前のリストを作っている
 	//現在は必要ないが、以前シートに掲載されている国名にばらつきがあったため一応入れている
 	var countrykeys = d3.set(nConfi.keys().concat(nRecov.keys().concat(nDeath.keys()))).values();
@@ -87,6 +87,18 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 		var confi = nConfi.get(key);
 		var recov = nRecov.get(key);
 		var death = nDeath.get(key);
+
+		if(!confi || !recov || !death ){
+			console.log({
+				key:key,
+				confi:confi,
+				recov:recov,
+				death:death
+			})
+
+			return null;
+		}
+
 
 		if(confi.length > 1){
 			//複数のcityデータがある場合は、一国としてまとめる
@@ -187,11 +199,12 @@ Promise.all([ p1, p2, p3, p4 ]).then(function(data) {
 			};
 		}
 
-	});
+	}).filter(function(d){ return d !== null});
 
 
 	//感染者数の累計を元に降順にならべかえる。
-	margeData.sort(function(a,b){return b.confirmed - a.confirmed})
+	margeData
+	.sort(function(a,b){return b.confirmed - a.confirmed})
 
 	var targetdata = margeData
 		.filter(function(d){ return d.confirmed > 100}) //ひとまず感染者数の累計が10人以上の国を対象とする
